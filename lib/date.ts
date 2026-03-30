@@ -19,7 +19,9 @@ function toSolar(date: Date) {
 }
 
 function ensureArray(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string')
+    : [];
 }
 
 export function formatDate(date: Date | string, pattern = 'yyyy-MM-dd') {
@@ -28,12 +30,6 @@ export function formatDate(date: Date | string, pattern = 'yyyy-MM-dd') {
 }
 
 export function getConstellation(date: Date) {
-  try {
-    const lunar = toSolar(date).getLunar();
-    const xingZuo = lunar.getXingZuo?.();
-    if (xingZuo) return xingZuo;
-  } catch {}
-
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
@@ -71,7 +67,13 @@ export function getPlaceholderLunarInfo(date: Date): LunarInfo {
   return {
     label: `${lunarMonth}月${lunarDay}`,
     zodiac: `${lunar.getYearShengXiao()}年`,
-    solarTerm: jieQi || lunarFestivals[0] || lunarOtherFestivals[0] || solarFestivals[0] || yueXiang || '',
+    solarTerm:
+      jieQi ||
+      lunarFestivals[0] ||
+      lunarOtherFestivals[0] ||
+      solarFestivals[0] ||
+      yueXiang ||
+      '',
     suitable: suitable.length ? suitable : ['记录', '整理', '休息'],
     avoid: avoid.length ? avoid : ['过劳', '拖延']
   };
