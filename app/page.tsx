@@ -3,6 +3,9 @@ import { NoteSummary } from '@/components/dashboard/note-summary';
 import { TodayOverview } from '@/components/dashboard/today-overview';
 import { TodoSummary } from '@/components/dashboard/todo-summary';
 import { PageHeader } from '@/components/shared/page-header';
+import { MoodWeatherCard } from '@/components/weather/mood-weather-card';
+import { RealWeatherCard } from '@/components/weather/real-weather-card';
+import { formatDate } from '@/lib/date';
 
 export default function HomePage() {
   return (
@@ -17,6 +20,15 @@ export default function HomePage() {
         <TodayOverview />
         <DailyCardPanel />
       </div>
+
+      <section className="grid gap-6 xl:grid-cols-[1.2fr_1fr]">
+        <RealWeatherCard />
+        <MoodWeatherCard
+          date={formatDate(new Date(), 'yyyy-MM-dd')}
+          title="抽象心情"
+          description="选一个最贴近你今天状态的内容吧。"
+        />
+      </section>
 
       <div className="grid gap-6 xl:grid-cols-2">
         <TodoSummary />
