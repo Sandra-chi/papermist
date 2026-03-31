@@ -2,13 +2,21 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookHeart, CalendarDays, ClipboardList, LayoutDashboard, StickyNote } from 'lucide-react';
+import {
+  BookHeart,
+  CalendarDays,
+  ClipboardList,
+  LayoutDashboard,
+  StickyNote,
+  Users
+} from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
 const items = [
   { href: '/', label: '首页', icon: LayoutDashboard },
   { href: '/calendar', label: '日历', icon: CalendarDays },
+  { href: '/shared', label: '共享日历', icon: Users },
   { href: '/journal', label: '手帐', icon: BookHeart },
   { href: '/todos', label: '待办', icon: ClipboardList },
   { href: '/notes', label: '笔记', icon: StickyNote }
@@ -32,7 +40,9 @@ export function SidebarNav() {
       <nav className="space-y-2">
         {items.map((item) => {
           const Icon = item.icon;
-          const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+          const active =
+            pathname === item.href ||
+            (item.href !== '/' && pathname.startsWith(item.href));
 
           return (
             <Link
@@ -40,7 +50,9 @@ export function SidebarNav() {
               href={item.href}
               className={cn(
                 'flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition-all',
-                active ? 'bg-white text-foreground shadow-soft' : 'text-muted-foreground hover:bg-white/70 hover:text-foreground'
+                active
+                  ? 'bg-white text-foreground shadow-soft'
+                  : 'text-muted-foreground hover:bg-white/70 hover:text-foreground'
               )}
             >
               <Icon className="h-4 w-4" />
