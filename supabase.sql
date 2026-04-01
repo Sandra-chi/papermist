@@ -184,3 +184,89 @@ insert into public.daily_cards (card_date, title, subtitle, image_url, theme)
 values
   (current_date, '雾里拾光，纸上安放心事', '把今天放慢一点，用柔和的节奏安排生活、记录灵感与心情。', 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80', 'Paper Calm')
 on conflict (card_date) do nothing;
+
+-- shared calendars
+create table if not exists shared_calendars (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid null,
+  title text not null,
+  description text default '',
+  type text not null default 'custom',
+  theme text default 'rose',
+  cover_emoji text default '📅',
+  invite_code text not null unique,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists shared_calendar_members (
+  id uuid primary key default gen_random_uuid(),
+  calendar_id uuid not null references shared_calendars(id) on delete cascade,
+  user_id uuid null,
+  display_name text not null default '成员',
+  role text not null default 'member',
+  joined_at timestamptz not null default now()
+);
+
+create table if not exists shared_calendar_events (
+  id uuid primary key default gen_random_uuid(),
+  calendar_id uuid not null references shared_calendars(id) on delete cascade,
+  creator_id uuid null,
+  event_date date not null,
+  title text not null,
+  description text default '',
+  location text default '',
+  start_time text default '',
+  end_time text default '',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists shared_calendar_todos (
+  id uuid primary key default gen_random_uuid(),
+  calendar_id uuid not null references shared_calendars(id) on delete cascade,
+  creator_id uuid null,
+  assignee_id uuid null,
+  target_date date not null,
+  title text not null,
+  description text default '',
+  status text not null default 'todo',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists shared_calendar_entries (
+  id uuid primary key default gen_random_uuid(),
+  calendar_id uuid not null references shared_calendars(id) on delete cascade,
+  user_id uuid null,
+  entry_date date not null,
+  title text default '',
+  content text not null,
+  mood_weather text default 'sunny',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_shared_calendars_owner_id
+  on shared_calendars(owner_id);
+
+create index if not exists idx_shared_calendar_members_calendar_id
+  on shared_calendar_members(calendar_id);
+
+create index if not exists idx_shared_calendar_events_calendar_id
+  on shared_calendar_events(calendar_id);
+
+create index if not exists idx_shared_calendar_events_event_date
+  on shared_calendar_events(event_date);
+
+create index if not exists idx_shared_calendar_todos_calendar_id
+  on shared_calendar_todos(calendar_id);
+
+create index if not exists idx_shared_calendar_todos_target_date
+  on shared_calendar_todos(target_date);
+
+create index if not exists idx_shared_calendar_entries_calendar_id
+  on shared_calendar_entries(calendar_id);
+
+create index if not exists idx_shared_calendar_entries_entry_date
+  on shared_calendar_entries(entry_date);

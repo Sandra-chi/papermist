@@ -3,6 +3,7 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import { CalendarPlus2, CheckCheck, NotebookPen } from 'lucide-react';
 
 import { PageHeader } from '@/components/shared/page-header';
 import { Button } from '@/components/ui/button';
@@ -39,6 +40,7 @@ export default function SharedCalendarDatePage({
   const [eventLocation, setEventLocation] = useState('');
 
   const [todoTitle, setTodoTitle] = useState('');
+
   const [entryTitle, setEntryTitle] = useState('');
   const [entryContent, setEntryContent] = useState('');
   const [entryMood, setEntryMood] = useState('sunny');
@@ -70,81 +72,115 @@ export default function SharedCalendarDatePage({
       <PageHeader
         badge="Shared Day"
         title={`${bundle.calendar.title} · ${params.date}`}
-        description="在这一天里一起安排事件、待办和一句话记录。"
+        description="在这一天里一起安排事件、待办、记录和心情天气。"
         actions={
-          <Button asChild variant="outline">
-            <Link href={`/shared/${params.id}`}>返回共享月历</Link>
-          </Button>
+          <div className="flex gap-3">
+            <Button asChild variant="outline">
+              <Link href={`/shared/${params.id}`}>返回共享月历</Link>
+            </Button>
+          </div>
         }
       />
 
+      <section className="grid gap-4 md:grid-cols-4">
+        <div className="rounded-[24px] border border-white/70 bg-white/85 px-5 py-5 shadow-soft">
+          <p className="text-xs text-muted-foreground">共享事件</p>
+          <p className="mt-2 text-3xl font-semibold">{dayEvents.length}</p>
+          <p className="mt-2 text-sm text-muted-foreground">今天一起安排的事项</p>
+        </div>
+
+        <div className="rounded-[24px] border border-white/70 bg-white/85 px-5 py-5 shadow-soft">
+          <p className="text-xs text-muted-foreground">共享待办</p>
+          <p className="mt-2 text-3xl font-semibold">{dayTodos.length}</p>
+          <p className="mt-2 text-sm text-muted-foreground">今天一起推进的小事</p>
+        </div>
+
+        <div className="rounded-[24px] border border-white/70 bg-white/85 px-5 py-5 shadow-soft">
+          <p className="text-xs text-muted-foreground">共享记录</p>
+          <p className="mt-2 text-3xl font-semibold">{dayEntries.length}</p>
+          <p className="mt-2 text-sm text-muted-foreground">今天留下的共同痕迹</p>
+        </div>
+
+        <div className="rounded-[24px] border border-white/70 bg-white/85 px-5 py-5 shadow-soft">
+          <p className="text-xs text-muted-foreground">今日主题</p>
+          <p className="mt-2 text-lg font-semibold">{meta.lunar.solarTerm || meta.constellation}</p>
+          <p className="mt-2 text-sm text-muted-foreground">适合安排与记录的一天</p>
+        </div>
+      </section>
+
       <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <section className="rounded-[28px] border border-white/70 bg-white/85 p-6 shadow-sm">
-          <p className="text-sm text-slate-500">日期详情</p>
-          <h2 className="mt-2 text-3xl font-semibold text-slate-900">{meta.fullLabel}</h2>
-
-          <div className="mt-5 flex flex-wrap gap-3">
-            <span className="rounded-full bg-rose-50 px-3 py-1.5 text-sm text-rose-600">
-              {meta.constellation}
-            </span>
-            <span className="rounded-full bg-sky-50 px-3 py-1.5 text-sm text-sky-700">
-              {meta.lunar.zodiac}
-            </span>
-            <span className="rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-700">
-              {meta.lunar.label}
-            </span>
-            <span className="rounded-full bg-amber-50 px-3 py-1.5 text-sm text-amber-700">
-              {meta.lunar.solarTerm || '平日'}
-            </span>
-          </div>
-
-          <div className="mt-6 grid gap-6 md:grid-cols-2">
-            <div className="rounded-3xl bg-slate-50 p-5">
-              <p className="text-sm text-slate-500">宜</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {meta.lunar.suitable.map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full bg-sky-100 px-3 py-1.5 text-sm text-sky-700"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-3xl bg-slate-50 p-5">
-              <p className="text-sm text-slate-500">忌</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {meta.lunar.avoid.map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full bg-rose-50 px-3 py-1.5 text-sm text-rose-600"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section className="space-y-6">
-          <div className="rounded-[28px] border border-white/70 bg-white/85 p-6 shadow-sm">
-            <p className="text-sm text-slate-500">今日共享事件</p>
+          <div className="rounded-[28px] border border-white/70 bg-white/85 p-6 shadow-soft">
+            <p className="text-sm text-muted-foreground">日期详情</p>
+            <h2 className="mt-2 text-3xl font-semibold text-slate-900">{meta.fullLabel}</h2>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              <span className="rounded-full bg-rose-50 px-3 py-1.5 text-sm text-rose-600">
+                {meta.constellation}
+              </span>
+              <span className="rounded-full bg-sky-50 px-3 py-1.5 text-sm text-sky-700">
+                {meta.lunar.zodiac}
+              </span>
+              <span className="rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-700">
+                {meta.lunar.label}
+              </span>
+              <span className="rounded-full bg-amber-50 px-3 py-1.5 text-sm text-amber-700">
+                {meta.lunar.solarTerm || '平日'}
+              </span>
+            </div>
+
+            <div className="mt-6 grid gap-6 md:grid-cols-2">
+              <div className="rounded-3xl bg-slate-50 p-5">
+                <p className="text-sm text-slate-500">宜</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {meta.lunar.suitable.map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full bg-sky-100 px-3 py-1.5 text-sm text-sky-700"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-3xl bg-slate-50 p-5">
+                <p className="text-sm text-slate-500">忌</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {meta.lunar.avoid.map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full bg-rose-50 px-3 py-1.5 text-sm text-rose-600"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-[28px] border border-white/70 bg-white/85 p-6 shadow-soft">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <CalendarPlus2 className="h-4 w-4" />
+              今日共享事件
+            </div>
+
             <div className="mt-4 space-y-3">
               {dayEvents.length === 0 ? (
-                <p className="text-sm text-slate-400">今天还没有共享事件。</p>
+                <p className="text-sm text-muted-foreground">今天还没有共享事件。</p>
               ) : (
                 dayEvents.map((event) => (
                   <div key={event.id} className="rounded-2xl bg-slate-50 px-4 py-3">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-3">
                       <span className="text-sm font-medium text-slate-800">{event.title}</span>
                       <span className="text-xs text-slate-400">
                         {event.startTime || '--'} {event.endTime ? `- ${event.endTime}` : ''}
                       </span>
                     </div>
-                    {event.location ? <p className="mt-2 text-sm text-slate-500">{event.location}</p> : null}
+                    {event.location ? (
+                      <p className="mt-2 text-sm text-slate-500">{event.location}</p>
+                    ) : null}
                   </div>
                 ))
               )}
@@ -198,12 +234,18 @@ export default function SharedCalendarDatePage({
               </Button>
             </div>
           </div>
+        </section>
 
-          <div className="rounded-[28px] border border-white/70 bg-white/85 p-6 shadow-sm">
-            <p className="text-sm text-slate-500">今日共享待办</p>
+        <section className="space-y-6">
+          <div className="rounded-[28px] border border-white/70 bg-white/85 p-6 shadow-soft">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <CheckCheck className="h-4 w-4" />
+              今日共享待办
+            </div>
+
             <div className="mt-4 space-y-3">
               {dayTodos.length === 0 ? (
-                <p className="text-sm text-slate-400">今天还没有共享待办。</p>
+                <p className="text-sm text-muted-foreground">今天还没有共享待办。</p>
               ) : (
                 dayTodos.map((todo) => (
                   <button
@@ -213,7 +255,7 @@ export default function SharedCalendarDatePage({
                       toggleSharedTodo(params.id, todo.id);
                       refreshBundle();
                     }}
-                    className="flex w-full items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 text-left"
+                    className="flex w-full items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 text-left transition hover:bg-slate-100"
                   >
                     <span className="text-sm text-slate-800">{todo.title}</span>
                     <span
@@ -253,11 +295,15 @@ export default function SharedCalendarDatePage({
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-white/70 bg-white/85 p-6 shadow-sm">
-            <p className="text-sm text-slate-500">今日共享记录</p>
+          <div className="rounded-[28px] border border-white/70 bg-white/85 p-6 shadow-soft">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <NotebookPen className="h-4 w-4" />
+              今日共享记录
+            </div>
+
             <div className="mt-4 space-y-3">
               {dayEntries.length === 0 ? (
-                <p className="text-sm text-slate-400">还没有共享记录。</p>
+                <p className="text-sm text-muted-foreground">还没有共享记录。</p>
               ) : (
                 dayEntries.map((entry) => (
                   <div key={entry.id} className="rounded-2xl bg-slate-50 px-4 py-3">
@@ -267,7 +313,7 @@ export default function SharedCalendarDatePage({
                       </span>
                       <span className="text-xs text-slate-400">{entry.moodWeather}</span>
                     </div>
-                    <p className="mt-2 text-sm text-slate-500">{entry.content}</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-500">{entry.content}</p>
                   </div>
                 ))
               )}

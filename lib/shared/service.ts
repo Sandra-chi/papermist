@@ -1,15 +1,3 @@
-node_modules
-.next
-.env
-.env.local
-.env.*.local
-.DS_Store
-.vercel
-dist
-out
-coverage
-*.log
-
 // lib/shared/service.ts
 import type { SharedRepository } from '@/lib/shared/repository';
 import { localSharedRepository } from '@/lib/shared/repository-local';
